@@ -7,7 +7,7 @@ Germano Bertan, Mateus Tomazetto da Costa, Guilherme Rodrigues Bigaton e Guilher
 ORIENTAÇÕES PARA TESTE LOCAL
 * Uma forma de testar a plataforma Lectus de forma local, já que a mesma não está disponível online.
 - Extrair o projeto PlataformaPI no seu servidor web local (recomenda-se o XAMPP)
-- Execute o arquivo lectus.sql no seu banco de dados local (recomenda-se o PHPMyAdmin)
+- Execute o arquivo lectus.sql no seu banco de dados local (recomenda-se o  uso do PHPMyAdmin)
 - Utilização de usuário teste:
       - Usuario: teste@lectus.com
       - Senha:   Lectus123
