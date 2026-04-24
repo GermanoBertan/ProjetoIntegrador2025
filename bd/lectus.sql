@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27/11/2025 às 14:49
+-- Tempo de geração: 24/04/2026 às 16:49
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -446,7 +446,8 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`codUsuario`, `email`, `senha`, `nome`, `dtNascimento`, `adm`) VALUES
 (1, 'usuarioAdmin@platleitura.com', '$2b$12$IYKIZRG8iLqwivy8gRUNYeqmf6fqn4sOrxDydlBsVLk87l7AfMQvi', 'Pedro', '2000-03-20', 1),
-(2, 'usuarioTeste@platleitura.com', '$2y$10$QlHZln895yxz0ZXojZn3uOOr5cuzAkcnwpIBpQJg4r1Uv9vKl7eXa', 'Demostração', '2015-03-04', 0);
+(2, 'usuarioTeste@platleitura.com', '$2y$10$QlHZln895yxz0ZXojZn3uOOr5cuzAkcnwpIBpQJg4r1Uv9vKl7eXa', 'Demostração', '2015-03-04', 0),
+(8, 'teste@lectus.com', '$2y$10$0Aej/R6TOVBaPeOj5g9OnOKHNAvUdX6L11UMdorKtwA2vOg34l7ei', 'Teste', '2000-01-01', 0);
 
 --
 -- Índices para tabelas despejadas
@@ -598,7 +599,7 @@ ALTER TABLE `resenha`
 -- AUTO_INCREMENT de tabela `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `codUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `codUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restrições para tabelas despejadas
