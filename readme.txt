@@ -1,5 +1,5 @@
 # PLATAFORMA LECTUS
-Desenvolvida no Componente Currícular de Projeto Integrador III, no ano de 2025.
+Desenvolvida no Componente Curricular de Projeto Integrador III, no ano de 2025.
 INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIAS E TECNOLOGIA DO RIO GRANDE DO SUL - IFRS CAMPUS ERECHIM
 ENSINO MÉDIO INTEGRADO TÉCNICO EM INFORMÁTICA - 3º ANO
 Germano Bertan, Mateus Tomazetto da Costa, Guilherme Rodrigues Bigaton e Guilherme Vaz Davilla
