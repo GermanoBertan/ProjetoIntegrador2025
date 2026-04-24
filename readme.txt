@@ -1,3 +1,17 @@
+# PLATAFORMA LECTUS
+Desenvolvida no Componente Currícular de Projeto Integrador III, no ano de 2025.
+INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIAS E TECNOLOGIA DO RIO GRANDE DO SUL - IFRS CAMPUS ERECHIM
+ENSINO MÉDIO INTEGRADO TÉCNICO EM INFORMÁTICA - 3º ANO
+Germano Bertan, Mateus Tomazetto da Costa, Guilherme Rodrigues Bigaton e Guilherme Vaz Davilla
+
+ORIENTAÇÕES PARA TESTE LOCAL
+* Uma forma de testar a plataforma Lectus de forma local, já que a mesma não está disponível online.
+- Extrair o projeto PlataformaPI no seu servidor web local (recomenda-se o XAMPP)
+- Execute o arquivo lectus.sql no seu banco de dados local (recomenda-se o PHPMyAdmin)
+- Utilização de usuário teste:
+      - Usuario: teste@lectus.com
+      - Senha:   Lectus123
+
 ORIENTAÇÕES GERAIS PARA A IMPLEMENTAÇÃO DO PLATAFORMA
 * Uma forma de organizar e padronizar o código da aplicação, para garantir entendimento por todos do grupo
 
