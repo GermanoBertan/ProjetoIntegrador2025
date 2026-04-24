@@ -1,0 +1,34 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+#container {
+    padding-bottom: 40px;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+input.erro {
+    border: 2px solid #c00000 !important;
+    background: #ffe5e5 !important;
+}
+
+small.erro {
+    color: #c00000;
+    font-size: 13px;
+    display: none;
+}
+
+.azul{
+    background-color: #36489e;
+}
+#btnCriar {
+    background-color: #36489e;
+    border: none;
+}
+
+#btnCriar:hover {
+    background-color: #596ed3;
+}

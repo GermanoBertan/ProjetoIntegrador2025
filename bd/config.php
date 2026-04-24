@@ -2,7 +2,10 @@
 // Constantes de configuração da conexão com o banco de dados
 define("SERVIDOR","localhost");
 define("USUARIO","root");
+
+//define("SENHA","mysql");
 define("SENHA","");
-define("BANCO","PlatPILeitura");
+
+define("BANCO","Lectus");
 
 ?>

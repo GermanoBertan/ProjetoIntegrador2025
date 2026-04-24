@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="img/logo.png">
+    <title>LECTUS - Organize suas Leituras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Padrão de Fundo para o Hero (Versão Clara) */
+        .hero-pattern {
+            background-color: #f4f1ff; /* lectus-light */
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e7ff' fill-opacity='0.6'%3E%3Cpath d='M88.75 60.18L70.82 50.8c-1.3-.65-2.88-.65-4.18 0l-17.93 9.38-17.93-9.38c-1.3-.65-2.88-.65-4.18 0L8.75 60.18v29.5L26.68 99.06c1.3.65 2.88.65 4.18 0l17.93-9.38 17.93 9.38c1.3.65 2.88.65 4.18 0L88.75 89.68v-29.5zM60 21.06L42.07 11.68c-1.3-.65-2.88-.65-4.18 0L20.07 21.06v29.5L37.98 60.3c1.3.65 2.88.65 4.18 0L60 50.56v-29.5zM107.5 72.18L89.57 62.8c-1.3-.65-2.88-.65-4.18 0L67.46 72.18l-17.92-9.38c-1.3-.65-2.88-.65-4.18 0L37.5 72.18v29.5L55.43 111.06c1.3.65 2.88.65 4.18 0L77.5 101.68l17.93 9.38c1.3.65 2.88.65 4.18 0L107.5 101.68v-29.5zM77.5 33.06L59.57 23.68c-1.3-.65-2.88-.65-4.18 0L37.5 33.06v29.5L55.43 72.3c1.3.65 2.88.65 4.18 0L77.5 62.56v-29.5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        /* Padrão de Fundo para o Hero (Versão Escura) */
+        .dark .hero-pattern {
+            background-color: #1f2937; /* gray-800 */
+            background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23374151' fill-opacity='0.6'%3E%3Cpath d='M88.75 60.18L70.82 50.8c-1.3-.65-2.88-.65-4.18 0l-17.93 9.38-17.93-9.38c-1.3-.65-2.88-.65-4.18 0L8.75 60.18v29.5L26.68 99.06c1.3.65 2.88.65 4.18 0l17.93-9.38 17.93 9.38c1.3.65 2.88.65 4.18 0L88.75 89.68v-29.5zM60 21.06L42.07 11.68c-1.3-.65-2.88-.65-4.18 0L20.07 21.06v29.5L37.98 60.3c1.3.65 2.88.65 4.18 0L60 50.56v-29.5zM107.5 72.18L89.57 62.8c-1.3-.65-2.88-.65-4.18 0L67.46 72.18l-17.92-9.38c-1.3-.65-2.88-.65-4.18 0L37.5 72.18v29.5L55.43 111.06c1.3.65 2.88.65 4.18 0L77.5 101.68l17.93 9.38c1.3.65 2.88.65 4.18 0L107.5 101.68v-29.5zM77.5 33.06L59.57 23.68c-1.3-.65-2.88-.65-4.18 0L37.5 33.06v29.5L55.43 72.3c1.3.65 2.88.65 4.18 0L77.5 62.56v-29.5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        /* Estilos do Modal Lightbox */
+        .modal-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        .modal-lightbox.open {
+            display: flex;
+        }
+        .modal-content-img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 0.75rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Habilita modo escuro via classe 'dark' no <html>
+            theme: {
+                extend: {
+                    colors: {
+                        'lectus-purple': '#5241a5',
+                        'lectus-light': '#f4f1ff',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-gray-900 antialiased dark:bg-gray-900 dark:text-gray-100">
+
+    <!-- Modal Lightbox -->
+    <div id="imageModal" class="modal-lightbox" onclick="closeModal()">
+        <img id="modalImage" class="modal-content-img" src="" alt="Visualização em Tela Cheia">
+        <button 
+            class="absolute top-6 right-6 text-white text-4xl font-bold p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition"
+            onclick="closeModal(event)"
+            aria-label="Fechar visualização"
+        >&times;</button>
+    </div>
+
+    <!-- Barra de Navegação Fixa -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md dark:bg-gray-800 dark:shadow-lg transition-colors duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center max-w-7xl">
+            <!-- Logo na Navbar (h-10 e rounded-lg aplicados) -->
+            <a href="index.html" class="flex items-center">
+                <img 
+                    src="img/logoCinza.png" 
+                    alt="Logo LECTUS" 
+                    class="h-10 object-contain rounded-lg"
+                    onerror="this.onerror=null; this.alt='LECTUS'; this.classList.add('text-2xl', 'font-black', 'text-lectus-purple', 'tracking-wider'); this.outerHTML='<span class=\'text-2xl font-black text-lectus-purple tracking-wider\'>LECTUS</span>';"
+                >
+            </a>
+            
+            <!-- Links de Navegação (Desktop) -->
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="#sobre" class="text-gray-700 hover:text-lectus-purple dark:text-gray-300 dark:hover:text-lectus-purple transition duration-200">Sobre</a>
+                <a href="#funcionalidades" class="text-gray-700 hover:text-lectus-purple dark:text-gray-300 dark:hover:text-lectus-purple transition duration-200">Funcionalidades</a>
+                <a href="#visualizacao" class="text-gray-700 hover:text-lectus-purple dark:text-gray-300 dark:hover:text-lectus-purple transition duration-200">Visualização</a>
+            </div>
+
+            <!-- Ações (Manual e Dark Mode) -->
+            <div class="flex items-center space-x-4">
+                <!-- Botão Manual do Sistema -->
+                <a href="index.php" target="_blank" class="hidden sm:inline-block px-4 py-2 text-sm font-semibold text-white bg-lectus-purple rounded-xl shadow-md hover:bg-purple-700 transition duration-300">
+                    Acesso a Lectus
+                </a>
+                
+                <!-- Botão de Modo Escuro -->
+                <button 
+                    id="darkModeToggle"
+                    onclick="toggleDarkMode()" 
+                    class="p-2 rounded-full text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition duration-300 focus:outline-none"
+                    aria-label="Alternar Modo Escuro/Claro"
+                >
+                    <!-- Ícone será inserido pelo JavaScript para ser dinâmico -->
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-pattern relative overflow-hidden pt-12"> <!-- Adicionado pt-12 para compensar a navbar fixa -->
+        <div class="container mx-auto px-6 py-24 md:py-36 xl:py-48 min-h-[90vh] flex flex-col justify-center items-center text-center relative z-10">
+            <!-- Título substituído pela imagem (LOGO MAIOR E COM ROUNDED-XL) -->
+            <img 
+                src="img/logoCinza.png" 
+                alt="Logo LECTUS" 
+                class="h-36 md:h-44 xl:h-52 mb-6 object-contain rounded-xl"
+                onerror="this.onerror=null; this.alt='LECTUS'; this.classList.remove('h-36', 'md:h-44', 'xl:h-52', 'rounded-xl'); this.classList.add('text-6xl', 'md:text-8xl', 'font-black', 'text-lectus-purple'); this.outerHTML='<h1 class=\'text-6xl md:text-8xl font-black text-lectus-purple mb-6\'>LECTUS</h1>';"
+            >
+            <p class="text-3xl md:text-5xl font-extrabold text-gray-800 dark:text-gray-100 max-w-4xl mb-4">Organize, Resenhe, Conecte-se.</p>
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mb-12">A plataforma definitiva desenvolvida no IFRS para incentivar e gerenciar a leitura dos jovens do Ensino Médio.</p>
+            <a href="index.php" class="px-12 py-5 bg-lectus-purple text-white text-xl font-bold rounded-xl shadow-2xl shadow-purple-500/50 hover:bg-purple-700 transition-transform transform hover:scale-105 duration-300 ease-in-out">
+                Acessar Plataforma Agora
+            </a>
+        </div>
+        <!-- Efeitos de blur e cor para profundidade -->
+        <div class="absolute -bottom-1/3 -left-1/4 w-[500px] h-[500px] bg-purple-200 rounded-full opacity-30 blur-3xl dark:bg-purple-900/40"></div>
+        <div class="absolute -top-1/4 -right-1/4 w-[700px] h-[700px] bg-indigo-200 rounded-full opacity-30 blur-3xl dark:bg-indigo-900/40"></div>
+    </header>
+
+    <!-- About/Mission Section -->
+    <section id="sobre" class="py-24 md:py-36 bg-white dark:bg-gray-800 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+                <div class="md:order-2">
+                    <h2 class="text-4xl md:text-5xl font-bold text-lectus-purple mb-6">Nossa Missão</h2>
+                    <p class="text-xl text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">O LECTUS nasceu da necessidade de oferecer aos estudantes do Ensino Médio uma ferramenta centralizada para gerenciar tanto as leituras obrigatórias quanto as de lazer. Nosso objetivo é transformar a organização de livros em uma tarefa simples e motivadora.</p>
+                    <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed border-l-4 border-lectus-purple pl-4 italic">"Foram realizadas pesquisas bibliográfica, levantamento de requisitos, modelagem UML e criação de protótipos de interface para garantir uma experiência sólida." <br> - Trecho do Projeto Integrador III (Os autores).</p>
+                </div>
+                <div class="md:order-1 flex justify-center items-center">
+                    <div class="p-8 bg-lectus-light dark:bg-gray-700 rounded-xl shadow-xl w-full max-w-md text-center">
+                        <span class="text-6xl mb-4 block">💡</span>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Conhecimento na Ponta dos Dedos</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mt-2">Um projeto com foco em usabilidade e na jornada do jovem leitor entre as histórias.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features Section (Funcionalidades) -->
+    <section id="funcionalidades" class="py-24 md:py-36 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-gray-800 dark:text-gray-100">Recursos Principais</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Tudo o que você precisa para controlar sua leitura e compartilhar suas resenhas.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <!-- Feature 1: Estantes Virtuais -->
+                <div class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl border-t-4 border-lectus-purple transition-shadow duration-300 hover:shadow-2xl">
+                    <span class="text-5xl mb-6 block text-lectus-purple">📚</span>
+                    <h3 class="text-2xl font-extrabold text-gray-900 dark:text-gray-100 mb-3">Estantes Pensadas</h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Classifique instantaneamente seus livros em três categorias vitais: 'Lendo', 'Lidos' e 'Quero Ler. Mantenha o foco no que é prioridade e monitorando seu progresso de leitura ao longo do tempo.</p>
+                </div>
+                
+                <!-- Feature 2: Resenhas e Comunidade -->
+                <div class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl border-t-4 border-lectus-purple transition-shadow duration-300 hover:shadow-2xl">
+                    <span class="text-5xl mb-6 block text-lectus-purple">💬</span>
+                    <h3 class="text-2xl font-extrabold text-gray-900 dark:text-gray-100 mb-3">Interação e Opinião</h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Crie resenhas pessoais detalhadas ou envie comentários rápidos. Disponibilize suas resenhas para o público e descubra mais opiniões sobre o que esta lendo.</p>
+                </div>
+                
+                <!-- Feature 3: Perfil de Leitor -->
+                <div class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl border-t-4 border-lectus-purple transition-shadow duration-300 hover:shadow-2xl">
+                    <span class="text-5xl mb-6 block text-lectus-purple">👤</span>
+                    <h3 class="text-2xl font-extrabold text-gray-900 dark:text-gray-100 mb-3">Controle de Privacidade</h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Seu perfil, suas regras. Mantenha seu histórico de leitura e resenhas como um diário particular ou opte por um perfil público para se conectar e compartilhar com a comunidade LECTUS.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Differentials Section -->
+    <section id="diferenciais" class="py-24 md:py-36 bg-white dark:bg-gray-800 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-6xl">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">Diferenciais Técnicos e de Uso</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Focamos em regras de negócio que garantem a qualidade do conteúdo e a usabilidade.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+                <!-- Differential 1: RN06 - Autor por Livro -->
+                <div class="p-8 bg-lectus-light dark:bg-gray-700 rounded-xl shadow-lg flex flex-col justify-start">
+                    <div class="flex items-center mb-4">
+                        <span class="text-4xl text-lectus-purple mr-4">✍️</span>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Cadastro Rigoroso</h3>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Todo livro deve ter um autor e uma categoria: Para manter a integridade e precisão do catálogo, o sistema exige que todo livro cadastrado esteja associado a, no mínimo, um autor e uma categoria. Isso impede a adição de dados incompletos ou de difícil rastreamento.</p>
+                </div>
+                
+                <!-- Differential 2: RN04 - Limite de Resenha -->
+                <div class="p-8 bg-lectus-light dark:bg-gray-700 rounded-xl shadow-lg flex flex-col justify-start">
+                    <div class="flex items-center mb-4">
+                        <span class="text-4xl text-lectus-purple mr-4">⏱️</span>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Resenhas Concisas</h3>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Comunicação objetiva: Impomos um limite de 200 caracteres para comentários. Isso incentiva a síntese e a clareza, facilitando a leitura rápida e o engajamento na comunidade.</p>
+                </div>
+
+                <!-- Differential 3: Histórico de Leitura (Implícito) -->
+                <div class="p-8 bg-lectus-light dark:bg-gray-700 rounded-xl shadow-lg flex flex-col justify-start">
+                    <div class="flex items-center mb-4">
+                        <span class="text-4xl text-lectus-purple mr-4">🗓️</span>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Controle Temporal</h3>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Acompanhe seu histórico: A plataforma registra as datas de identificação dos livros, permitindo que você visualize a evolução do seu acervo e das suas interações ao longo do tempo.</p>
+                </div>
+
+                <!-- Differential 4: Foco no Público -->
+                <div class="p-8 bg-lectus-light dark:bg-gray-700 rounded-xl shadow-lg flex flex-col justify-start">
+                    <div class="flex items-center mb-4">
+                        <span class="text-4xl text-lectus-purple mr-4">🎓</span>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Desenvolvimento Acadêmico</h3>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">Fruto de um Projeto Integrador no IFRS, o LECTUS é otimizado para a rotina do Ensino Médio, priorizando ferramentas que apoiam a disciplina e a organização acadêmica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Mockup Section -->
+    <section id="visualizacao" class="py-24 md:py-36 bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-gray-100 mb-4">A LECTUS em Ação</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">Confira a interface limpa e intuitiva desenvolvida para você. Clique para ampliar!</p>
+            </div>
+            
+            <!-- Galeria de Imagens -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Captura 1: Visualização Principal -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden group cursor-pointer" 
+                     onclick="openModal('img/Captura1.png')">
+                    <img 
+                        src="img/Captura1.png" 
+                        alt="Captura de tela 1: Visualização do Dashboard" 
+                        class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                    >
+                    <div class="p-4 text-center">
+                        <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Visualização do Acervo</p>
+                    </div>
+                </div>
+
+                <!-- Captura 2: Detalhes de Livro/Cadastro -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden group cursor-pointer" 
+                     onclick="openModal('img/Captura2.png')">
+                    <img 
+                        src="img/Captura2.png" 
+                        alt="Captura de tela 2: Detalhes do livro e opções de estante" 
+                        class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                    >
+                    <div class="p-4 text-center">
+                        <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Detalhes e Classificação</p>
+                    </div>
+                </div>
+
+                <!-- Captura 3: Interação ou Perfil -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden group cursor-pointer" 
+                     onclick="openModal('img/Captura3.png')">
+                    <img 
+                        src="img/Captura3.png" 
+                        alt="Captura de tela 3: Área de resenhas e interação social" 
+                        class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                    >
+                    <div class="p-4 text-center">
+                        <p class="text-sm font-semibold text-gray-600 dark:text-gray-300">Área de Resenhas</p>
+                    </div>
+                </div>
+
+            </div>
+            
+            <p class="text-center text-sm text-gray-500 dark:text-gray-500 mt-10 italic">As imagens acima são capturas reais da interface da plataforma LECTUS.</p>
+        </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section id="cta-final" class="bg-lectus-purple text-white py-24 md:py-36">
+        <div class="container mx-auto px-6 text-center max-w-4xl">
+            <h2 class="text-4xl md:text-6xl font-black mb-6">Comece a ler de forma inteligente!</h2>
+            <p class="text-xl md:text-2xl text-purple-200 max-w-2xl mx-auto mb-12">Não perca mais tempo organizando. Use o LECTUS e concentre-se na leitura. Seu próximo livro espera por você.</p>
+            <a href="index.php" class="px-14 py-6 bg-white text-lectus-purple text-xl font-bold rounded-full shadow-2xl hover:bg-gray-100 transition-transform transform hover:scale-105 duration-300 ease-in-out uppercase tracking-widest">
+                Acessar Plataforma
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 dark:bg-black py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 LECTUS. Todos os direitos reservados. IFRS Campus Erechim.</p>
+            <p class="text-xs mt-2">Desenvolvimento: Germano Bertan, Guilherme Bigaton Rodrigues, Mateus Tomazetto da Costa, Guilherme Vaz Davila.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript para funções -->
+    <script>
+        const html = document.documentElement;
+        const toggleButton = document.getElementById('darkModeToggle');
+        
+        // Símbolos SVG para os ícones (Sun/Moon)
+        const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>`;
+        const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>`;
+
+        /**
+         * Alterna entre modo claro e modo escuro.
+         */
+        function toggleDarkMode() {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                toggleButton.innerHTML = moonIcon;
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                toggleButton.innerHTML = sunIcon;
+            }
+        }
+
+        /**
+         * Configura o modo escuro ao carregar a página (com base na preferência salva ou do sistema).
+         */
+        function setupDarkMode() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                html.classList.add('dark');
+                toggleButton.innerHTML = sunIcon;
+            } else {
+                html.classList.remove('dark');
+                toggleButton.innerHTML = moonIcon;
+            }
+        }
+
+        // --- Funções de Lightbox ---
+
+        function openModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            
+            modalImage.src = src;
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            // Se o evento foi passado e o clique foi na imagem, não fechar (para que o usuário possa inspecionar a imagem)
+            if (event && event.target === document.getElementById('modalImage')) {
+                return; 
+            }
+
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        
+        // Fechar com a tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('imageModal').classList.contains('open')) {
+                closeModal();
+            }
+        });
+
+        // Inicializar a função de modo escuro ao carregar a página
+        window.onload = setupDarkMode;
+    </script>
+
+</body>
+</html>

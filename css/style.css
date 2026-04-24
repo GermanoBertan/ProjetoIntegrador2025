@@ -1,6 +1,90 @@
-.corPrincipal{
-    background-color: cornflowerblue;
+.corBranca{
+    color: white;
 }
-.corAzulEscuro{
-    color: darkblue;
+.corAzul{
+    background-color: #36489e;
 }
+.corCinza{
+    background-color:#e6e6e6;
+}
+.letraMaiuscula{
+    text-transform: uppercase;
+}
+.nomeLivro{
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: small;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.infoLivroLeitura{
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: medium;
+    padding-left: 3px;
+    color: #36489e;
+}
+.recuoLeituraInfoLivro{
+    margin-left: 3%;
+}
+.nPagina{
+    font-size: medium;
+    color: black;
+}
+.checked {
+  color: orange;
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    color: #36489e;
+    width: 12rem;   
+    padding: 0px;
+}  
+.card-body {
+  margin-top: auto;
+}
+.card:hover{
+    border: 2px solid grey;
+    box-sizing: border-box;
+}
+.scrolling-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: initial;
+}
+.fonteCinza{
+    color: rgb(197, 197, 197);
+}
+.imgCard{
+    width: 100%;
+    height: 18rem;
+}
+.barraProgresso{
+    height: 15px; 
+    border-radius: 0px;
+}
+.cards {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-auto-flow: column;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    justify-content: start;
+}
+.img-leitura{
+    height: 30rem;
+    width: 20rem;
+    margin: 5px;
+}
+.testeBOX{
+    height: 18rem;
+    width: 12rem;
+    
+}
+
+  
+
+  
